@@ -1,14 +1,37 @@
+
 var globCellRetournee1 = null;
 var globCellRetournee2 = null;
+var nbEssai = 0;
+var pairTrouve = 0;
+var nbUtilisateur = 0;
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+//l'utlisateur doit entre un nombre(paire) de cases
+
+var contenu = ["#81F7F3", "#FF4000", "#F3F781", "#DA81F5", "#000000","	#cccc00","#00cc00","#0000cc","#cc0000"];
+
+
+
+/**
+ * 
+ * @param {type} a
+ * @returns {undefined}
  */
+function start(){
+    nbUtilisateur = prompt("Entrer le nombre de case");
+    while (!(nbUtilisateur%2==0) || (nbUtilisateur>18)){
+        nbUtilisateur = prompt("Entrer le nombre de case (il doit etre pair et inferieur a 11)");
+    }
+    generTableau(nbUtilisateur);
+    attribuerCouleur(contenu, nbUtilisateur);
+}
 
-//test commit
-//
+
+/**
+ * @param {element html} a
+ * Pour chaque clic l'utilisateur doit combiner une paire de couleur,
+ * si la combinaison est correcte les cases trouvés disparaissent
+ * sinon elles se retournent 
+ */
 function clic(a) {
 
     if (globCellRetournee1 == null) {// Aucune cell retournée
@@ -21,45 +44,72 @@ function clic(a) {
 
         if ( globCellRetournee1.getAttribute("name") != globCellRetournee2.getAttribute("name") ) {
             nbEssai += 1;
-            // alert(nbEssai);
             globCellRetournee1.style.backgroundColor = "white";
             globCellRetournee2.style.backgroundColor = "white";
         }
         else{
             pairTrouve+=1;
+            //faire disparaitre la pair trouvé
+            globCellRetournee1.style.display = "none";
+            globCellRetournee2.style.display = "none";
+            
             if(pairTrouve == nbUtilisateur/2){
                 alert("Gagner \n votre nombre d'essai :"+nbEssai);
+                location.reload();
             }
+            
         }
         globCellRetournee1 = null;
         globCellRetournee2 = null;
     }
 }
 
-var nbEssai = 0;
-var pairTrouve = 0;
-var nbUtilisateur = prompt("Entrer le nombre de case");
-while (!(nbUtilisateur % 2 == 0) && nbUtilisateur > 11) {
-    nbUtilisateur = prompt("Entrer le nombre de case (il doit etre pair et inferieur a 11)");
-}
-var contenu = ["#81F7F3", "#FF4000", "#F3F781", "#DA81F5", "#000000"];
-
-generTableau(nbUtilisateur);
-attribuerCouleur(contenu, nbUtilisateur);
 
 
+/**
+ * @param {number}
+ * Creer le tableau de jeu, en fonction du nombre entere en parametre
+ */
 function generTableau(nb) {
     var res = "<tbody>";
-    var entre = nb / 2;
-    for (i = 0; i < entre; i++) {
-        res = res + "<tr><td>" + i + " </td> <td>" + i + " </td></tr>";
+    var ligne =0;
+    var col =0;
+    switch(nb){
+        case "12" :
+            ligne = 4;
+            col = 3;
+            break;
+        case "16" :
+            ligne = 4;
+            col = 4;
+            break;
+        case "18" :
+            ligne = 3;
+            col = 6;
+            break;
+        default :
+            ligne = 2;
+            col = nb/2;
+    }
+    for (i = 0; i < ligne; i++) {
+        res+= "<tr>";
+        for(j=0; j< col; j++){
+           res = res + "<td>" + i+j + " </td>"; 
+        }
+       res+="</tr>"; 
     }
     res += "</tbody>";
     document.getElementById("memo").innerHTML = res;
+    
 }
 
+/**
+ * 
+ * @param {tab} tab
+ * @param {number} nb
+ * Attribuer les couleurs du tableau donné en parametre au cellule du tableau html
+ */
 function attribuerCouleur(tab, nb) {
-    var tableauhtml = document.getElementById("memo");
     var tabCellule = document.querySelectorAll("td");
     var tabCouleur = [];
     for (var i = 0; i < (nb / 2); i++) {
@@ -74,7 +124,12 @@ function attribuerCouleur(tab, nb) {
         tabCellule[i].setAttribute("id", tabCouleur[i] + i);
     }
 }
-
+ /**
+  * 
+  * @param {tab} tab
+  * @returns {tableau}
+  * Melanger le contenu du tableau donné en parametre 
+  */
 function shuffle(tab) {
     for (var i = 0; i < tab.length; i++) {
         var j = Math.floor(Math.random() * Math.floor(tab.length));
@@ -85,10 +140,16 @@ function shuffle(tab) {
     return tab;
 }
 
+/**
+ * 
+ * @param {tab} tab
+ * Affichage du tableau donné en parametre
+ */
 function affTab(tab) {
     var res = "";
     for (var i = 0; i < tab.length; i++) {
         res += tab[i];
     }
     alert(res);
+    
 }
