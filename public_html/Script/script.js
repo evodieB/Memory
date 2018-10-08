@@ -6,6 +6,9 @@ var globCellRetournee2 = null;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+//test commit
+//
 function clic(a) {
 
     if (globCellRetournee1 == null) {// Aucune cell retournée
